@@ -19,7 +19,6 @@ import tfgbola.main.objects.Vector;
 public class MainController {
 
     private TFGMoverObjetosMando tfg;
-
     private MainViewer viewer;
     private MainModel model;
 

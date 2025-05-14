@@ -25,6 +25,8 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private final Runnable[] aceleradorRunnable = new Runnable[1];
     private final Runnable[] frenoRunnable = new Runnable[1];
     private float ultimoAngulo = Float.NaN;
+
 
     @SuppressLint({"UseCompatLoadingForDrawables"})
     @Override
@@ -627,12 +630,17 @@ public class MainActivity extends AppCompatActivity {
         mainLayout.addView(settingsButton);
 
         setContentView(mainLayout);
+        startConnectionP2P();
+    }
 
+    private void startConnectionP2P() {
         if (!controllerInitialized) {
             startServer();
             controllerInitialized = true;
         }
-        startConnection();
+        if (!isConnected) {
+            startConnection();
+        }
     }
 
     /**
@@ -775,7 +783,6 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 // Inicia la conexión al servidor
                 discoverPCAndConnect();
-                startSendingVector();
             }
         });
         connectionThread.start();
@@ -792,7 +799,7 @@ public class MainActivity extends AppCompatActivity {
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
                 Log.d("DISCOVERY", "Esperando broadcast de PC...");
-                while (true) {
+                while (!isConnected) {
                     try {
                         socket.receive(packet);  // Intentar recibir el paquete
                         String mensaje = new String(packet.getData(), 0, packet.getLength());
@@ -802,13 +809,13 @@ public class MainActivity extends AppCompatActivity {
                             initConnection(pcIP);  // ← tu método para conectar
                             isConnected = true;
                             Log.d("CONECTADO!!", isConnected + "");
-                            break;  // Una vez conectado, salir del loop
                         }
                     } catch (SocketTimeoutException e) {
                         // Si se ha agotado el tiempo de espera, puedes intentar nuevamente
                         Log.d("DISCOVERY", "Tiempo de espera agotado. Reintentando...");
                     }
                 }
+                startSendingVector();
             } catch (IOException e) {
                 Log.e("DISCOVERY", "No se pudo recibir broadcast: " + e.getMessage());
             }
@@ -860,6 +867,9 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.d("OOS NULL? ", (oos == null) + "");
+                Log.d("JOYSTICK?", isJoystickView + "");
+                Log.d("IS CONNECTED? ", isConnected + "");
                 while (isJoystickView) {
                     try {
                         if (oos != null && isConnected) {
@@ -882,6 +892,8 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Función para enviar un mensaje al cliente.
+     * Es necesario crear un hilo porque Android Studio no permite operaciones de red dentro
+     * del hilo principal. Por lo tanto, para enviar el mensaje, creo un hilo que envía el mensaje.
      *
      * @param msg
      */
@@ -892,7 +904,7 @@ public class MainActivity extends AppCompatActivity {
                 synchronized (oos) {
                     try {
                         if (oos != null) {
-                            //Log.d("Enviando: ", msg);
+                            Log.d("MENSAJE: ", msg);
                             oos.writeObject(msg);
                             oos.flush();
                         }
@@ -925,32 +937,43 @@ public class MainActivity extends AppCompatActivity {
      * y nos da la opción de cerrar el juego o de reiniciar la partida.
      */
     public void gameOver() {
-        new AlertDialog.Builder(this).setTitle("Game Over").
-                setMessage("¿Qué deseas hacer?").
-                setCancelable(false).
-                setPositiveButton("Reiniciar", (dialog, which) -> reiniciarJuego()).
-                setNegativeButton("Salir", (dialog, which) -> salir()).show();
+        new AlertDialog.Builder(this).setTitle("Game Over").setMessage("¿Qué deseas hacer?").setCancelable(false).setPositiveButton("Reiniciar", (dialog, which) -> reiniciarJuego()).setNegativeButton("Salir", (dialog, which) -> salir()).show();
     }
 
     /**
-     *  Función para salir del mando
+     * Función para salir del mando
      */
     public void salir() {
-        sendMessageGson(new Message("EXIT", "EXIT").toGson());
-        try {
-            this.oos.close();
-            this.socket.close();
-            this.isConnected = false;
-            this.server.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        new Thread(() -> {
+            try {
+                if (oos != null) {
+                    String exitMsg = new Message("EXIT", "EXIT").toGson();
+                    Log.d("MENSAJE: ", exitMsg);
+                    synchronized (oos) {
+                        oos.writeObject(exitMsg);
+                        oos.flush();
+                    }
+                    oos.close();
+                    socket.close();
+                    controllerInitialized = false;
+                    isConnected = false;
+                    server.close();
+                    Thread.sleep(500);
+                    startConnectionP2P();
+                }
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
+
     /**
-     *  Función para reiniciar la partida
+     * Función para reiniciar la partida
      */
     private void reiniciarJuego() {
+        Log.d("REINICIAR!!!!!", "REINICIAR!!!!!");
+        sendMessageGson(new Message("reset", "reset").toGson());
         initRemoteController();
     }
 }

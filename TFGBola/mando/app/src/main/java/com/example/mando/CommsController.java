@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -24,14 +25,19 @@ public class CommsController implements Runnable {
     private ObjectInputStream ois;
 
     private boolean isConnected;
+    private volatile boolean shouldRun;
 
-    MainActivity main;
+
+    private MainActivity main;
 
     public CommsController(MainActivity main) {
         try {
+            this.shouldRun = true;
             setConnected(false);
             this.main = main;
-            this.serverSocket = new ServerSocket(11000);
+            this.serverSocket = new ServerSocket();
+            this.serverSocket.setReuseAddress(true);
+            this.serverSocket.bind(new InetSocketAddress(11000));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -117,14 +123,14 @@ public class CommsController implements Runnable {
     }
 
     /**
-     *  Función que lanza un broadcast para encontrar al cliente, acepta la petición y
-     *  mientras haya conexión, lee los posibles mensajes que nos mande
+     * Función que lanza un broadcast para encontrar al cliente, acepta la petición y
+     * mientras haya conexión, lee los posibles mensajes que nos mande
      */
     @Override
     public void run() {
         new Thread(this::sendBroadcastDatagram).start();
         acceptClient();
-        while (isConnected()) {
+        while (isConnected() && shouldRun) {
             readMessage();
         }
     }
@@ -132,10 +138,14 @@ public class CommsController implements Runnable {
     public void close() {
         try {
             setConnected(false);
-            this.ois.close();
-            this.socket.close();
+            this.shouldRun = false;
+            if (this.ois != null) this.ois.close();
+            if (this.socket != null && !this.socket.isClosed()) this.socket.close();
+            if (this.serverSocket != null && !this.serverSocket.isClosed()) this.serverSocket.close();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 }

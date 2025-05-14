@@ -119,7 +119,9 @@ public class MainViewer extends JFrame implements Runnable {
                     lastAsteroidTime = currentTime; // Reiniciar el temporizador
                 }
                 // Actualizar el juego: mover los objetos, verificar colisiones, etc.
-                actualizarJuego();
+                if (nave.isIsAlive()) {
+                    actualizarJuego();
+                }
                 // Solicitar repintado de la interfaz gráfica
                 this.mainPanel.paint();  // Esto actualizará la pantalla sin llamar directamente a paint()
                 Thread.sleep(20); // Control del FPS
@@ -164,6 +166,7 @@ public class MainViewer extends JFrame implements Runnable {
                 this.nave.damage(asteroide.getRadio());
                 if (!this.nave.isIsAlive()) {
                     this.mainController.sendGameOver();
+                    break;
                 }
             }
         }

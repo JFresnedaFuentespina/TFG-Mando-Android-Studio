@@ -57,8 +57,6 @@ public class CommsController implements Runnable {
         Message message = new Message(type, msg);
         if (oos != null) {
             try {
-                System.out.println("OOS HASH: " + oos.hashCode());
-                System.out.println("Enviando... " + message);
                 oos.writeObject(message.toGson());
                 oos.flush();
                 System.out.println("Mensaje enviado correctamente.");
@@ -131,7 +129,6 @@ public class CommsController implements Runnable {
 
                         // Extraer el campo "type"
                         String type = jsonObject.get("type").getAsString();
-                        //System.out.println("Tipo de mensaje: " + type);
 
                         switch (type) {
                             case "velocidad_nave": // Extraer el objeto "obj" y convertirlo en un Vector
@@ -150,7 +147,12 @@ public class CommsController implements Runnable {
                                 //System.out.println("VELOCIDAD DEL COCHE: " + gson.fromJson(jsonObject.get("obj"), String.class));
                                 main.setCarVelocidad(Float.parseFloat(gson.fromJson(jsonObject.get("obj"), String.class)));
                                 break;
+                            case "reset":
+                                System.out.println("RESET!!");
+                                main.reiniciar();
+                                break;
                             case "EXIT":
+                                System.out.println("EXIT!!");
                                 this.close();
                         }
 

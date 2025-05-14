@@ -47,6 +47,10 @@ public class TFGMoverObjetosMando {
     public void sendGameOver() {
         this.comms.sendMessage("GAME_OVER", "GAME_OVER");
     }
+    
+    public void reiniciar(){
+        this.main.reiniciarJuego();
+    }
 
     public static void main(String[] args) {
         // TODO code application logic here
