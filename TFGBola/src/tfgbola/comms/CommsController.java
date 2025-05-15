@@ -28,6 +28,7 @@ public class CommsController implements Runnable {
             this.serverSocket = new ServerSocket(10000);
             broadcastToAndroid();
             connectWithRemoteController();
+            
         } catch (IOException ex) {
             Logger.getLogger(CommsController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -46,14 +47,24 @@ public class CommsController implements Runnable {
             oos = new ObjectOutputStream(socketRemoteController.getOutputStream());
             oos.flush();
             System.out.println("Conexión establecida con el servidor en el puerto 11000!");
-            sendMessage("vibration", "vibration");
         } catch (IOException ex) {
             System.out.println("CONEXIÓN NO ESTABLECIDA!!!!");
             connectWithRemoteController();
         }
     }
+    
+    public void sendNaveInitMessages(double vida, boolean hasScore){
+        sendMessage("vibration", "vibration");
+        sendMessage("vida_inicial", vida);
+        sendMessage("hasScore", hasScore);
+    }
+    
+    public void sendRacingCarInitMessages(float cuentaAtras){
+        sendMessage("vibration", "vibration");
+        sendMessage("cuenta_atras", cuentaAtras);
+    }
 
-    public void sendMessage(String type, String msg) {
+    public void sendMessage(String type, Object msg) {
         Message message = new Message(type, msg);
         if (oos != null) {
             try {
@@ -104,7 +115,7 @@ public class CommsController implements Runnable {
             String mensaje = "PC_HOLA";
             byte[] buffer = mensaje.getBytes();
             DatagramPacket packet = new DatagramPacket(
-                    buffer, buffer.length, InetAddress.getByName("255.255.255.255"), 9999
+                    buffer, buffer.length, InetAddress.getByName("192.168.1.255"), 9999
             );
             datagramSocket.send(packet);
             System.out.println("Broadcast enviado a Android: PC_HOLA");

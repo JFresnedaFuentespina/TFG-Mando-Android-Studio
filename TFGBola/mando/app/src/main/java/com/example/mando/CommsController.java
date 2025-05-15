@@ -98,6 +98,8 @@ public class CommsController implements Runnable {
                 String jsonMessage = (String) ois.readObject();
                 JsonObject jsonObject = JsonParser.parseString(jsonMessage).getAsJsonObject();
                 String type = jsonObject.get("type").getAsString();
+                String obj = jsonObject.get("obj").getAsString();
+                Log.d("MENSAJE RECIBIDO!!!", type + " - " + obj);
                 switch (type) {
                     case "vibration":
                         main.vibration();
@@ -107,8 +109,16 @@ public class CommsController implements Runnable {
                     case "GAME_OVER":
                         main.runOnUiThread(() -> main.gameOver());
                         break;
+                    case "vida_inicial":
+                        main.setVidaMaxima((int)Double.parseDouble(obj));
+                        break;
+                    case "vida":
+                        main.setLifeBar((int)Double.parseDouble(obj));
+                        break;
+                    case "cuenta_atras":
+                        main.setCuentaAtrasMilis(Float.parseFloat(obj));
                     default:
-                        Log.d("MENSAJE ERRÓNEO", "Mensaje erróneo.");
+                        Log.d("NUEVO MENSAJE!!!", type);
                         break;
                 }
             } catch (Exception e) {
@@ -141,7 +151,8 @@ public class CommsController implements Runnable {
             this.shouldRun = false;
             if (this.ois != null) this.ois.close();
             if (this.socket != null && !this.socket.isClosed()) this.socket.close();
-            if (this.serverSocket != null && !this.serverSocket.isClosed()) this.serverSocket.close();
+            if (this.serverSocket != null && !this.serverSocket.isClosed())
+                this.serverSocket.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

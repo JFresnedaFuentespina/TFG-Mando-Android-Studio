@@ -4,11 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -19,11 +24,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.google.gson.Gson;
 
@@ -33,6 +42,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     // DECLARACIÓN DE VARIABLES
@@ -43,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private CommsController server;
     // Joystick
     private boolean isJoystickView = true;
+    private float vida;
+    private ProgressBar barraVida;
     private boolean isCarView = false;
     private JoystickView joystickView;
     // Reproductor de sonido
@@ -73,13 +85,15 @@ public class MainActivity extends AppCompatActivity {
     private boolean carLayoutInitialized = false;
     private boolean controllerInitialized = false;
     private boolean isMarchaAtras = false;
-
+    private TextView textoCuentaAtras;
+    private CountDownTimer countDownTimer;
     // Atributos OnTouch layout carreras
     private float velocidad = 0f;
     private final Handler handler = new Handler();
     private final Runnable[] aceleradorRunnable = new Runnable[1];
     private final Runnable[] frenoRunnable = new Runnable[1];
     private float ultimoAngulo = Float.NaN;
+    private int vidaMaxima;
 
 
     @SuppressLint({"UseCompatLoadingForDrawables"})
@@ -281,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressLint("ClickableViewAccessibility")
     private void initCarLayout() {
+        textoCuentaAtras = findViewById(R.id.textoCuentaAtras);
         isJoystickView = false;
         isCarView = true;
         // Configurar el botón de Settings
@@ -542,6 +557,34 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void setLifeBar(float vida) {
+        this.vida = vida;
+        Log.d("NUEVA VIDA DE LA NAVE!!! ", vida + "");
+        // Asegurar que la barra muestre bien el valor
+        barraVida.setProgress((int) this.vida);
+
+        // Cambiar color según el porcentaje
+        int color;
+        if (vida <= 10) {
+            color = Color.RED;
+        } else if (vida <= 50) {
+            color = Color.YELLOW;
+        } else {
+            color = Color.GREEN;
+        }
+
+        // Cambiar dinámicamente el color del drawable
+        LayerDrawable drawable = (LayerDrawable) barraVida.getProgressDrawable();
+        Drawable progress = drawable.findDrawableByLayerId(android.R.id.progress);
+        DrawableCompat.setTint(progress, color);
+
+    }
+
+
+    public void setVidaMaxima(int vida) {
+        this.vidaMaxima = vida;
+        setLifeBar(this.vidaMaxima);
+    }
 
     /**
      * Función para crear el layout del Joystick.
@@ -551,6 +594,9 @@ public class MainActivity extends AppCompatActivity {
         isCarView = false;
         mediaPlayer = MediaPlayer.create(this, R.raw.laser_gunshot);
         mediaPlayer.setLooping(false);
+
+        barraVida = findViewById(R.id.lifeBar);
+        setLifeBar(this.vida);
 
         FrameLayout mainLayout = new FrameLayout(this);
         mainLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -567,7 +613,14 @@ public class MainActivity extends AppCompatActivity {
         joystickParams.gravity = Gravity.CENTER;
         joystickView.setLayoutParams(joystickParams);
 
-        mainLayout.addView(joystickView); // Añadir el joystick al layout
+        mainLayout.addView(joystickView);
+
+        ViewGroup parent = (ViewGroup) barraVida.getParent();
+        if (parent != null) {
+            parent.removeView(barraVida);
+        }
+        mainLayout.addView(barraVida);
+
 
         // Aplicar el centro del joystick
         joystickView.post(new Runnable() {
@@ -793,6 +846,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void discoverPCAndConnect() {
         new Thread(() -> {
+            WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiManager.MulticastLock lock = wifi.createMulticastLock("lock");
+            lock.setReferenceCounted(true);
+            lock.acquire();
             try (DatagramSocket socket = new DatagramSocket(9999)) {
                 socket.setSoTimeout(10000); // Espera hasta 10 segundos
                 byte[] buffer = new byte[1024];
@@ -803,6 +860,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         socket.receive(packet);  // Intentar recibir el paquete
                         String mensaje = new String(packet.getData(), 0, packet.getLength());
+                        Log.d("BROADCAST!!!!", mensaje);
                         if (mensaje.equals("PC_HOLA")) {
                             String pcIP = packet.getAddress().getHostAddress();
                             Log.d("DISCOVERY", "IP del PC detectada: " + pcIP);
@@ -858,6 +916,10 @@ public class MainActivity extends AppCompatActivity {
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         long vibrate[] = {0, 100, 200, 300};
         vibrator.vibrate(vibrate, -1);
+    }
+
+    public void setVidaJoystick() {
+
     }
 
     /**
@@ -976,4 +1038,28 @@ public class MainActivity extends AppCompatActivity {
         sendMessageGson(new Message("reset", "reset").toGson());
         initRemoteController();
     }
+
+    public void setCuentaAtrasMilis(float cuentaAtrasMilis) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        countDownTimer = new CountDownTimer((long) cuentaAtrasMilis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int seconds = (int) (millisUntilFinished / 1000);
+                int minutes = seconds / 60;
+                seconds = seconds % 60;
+
+                String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+                textoCuentaAtras.setText(timeFormatted);
+            }
+
+            @Override
+            public void onFinish() {
+                textoCuentaAtras.setText("00:00");
+            }
+        }.start();
+    }
+
 }
