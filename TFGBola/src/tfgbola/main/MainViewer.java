@@ -30,6 +30,8 @@ public class MainViewer extends JFrame implements Runnable {
     private Car car;
     private ArrayList<Bala> balas;
     private ArrayList<Asteroide> asteroides;
+    
+    public static final float CUENTA_ATRAS_MILIS = 120000;
 
     private int score;
 
@@ -106,6 +108,8 @@ public class MainViewer extends JFrame implements Runnable {
         asteroides.add(asteroide);
         mainController.addAsteroide(asteroide);
     }
+    
+    
 
     @Override
     public void run() {
@@ -164,6 +168,7 @@ public class MainViewer extends JFrame implements Runnable {
             if (checkImpacto(nave, asteroide)) {
                 System.out.println("Colisión detectada entre nave y asteroide!");
                 this.nave.damage(asteroide.getRadio());
+                this.mainController.sendVidaNave(this.nave.getVida());
                 if (!this.nave.isIsAlive()) {
                     this.mainController.sendGameOver();
                     break;

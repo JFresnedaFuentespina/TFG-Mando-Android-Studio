@@ -19,7 +19,7 @@ public class Nave extends VODynamic implements Runnable {
 
     private double radio;
 
-    private double vida;
+    private int vida;
 
     public static final Vector VELOCIDAD_MAXIMA = new Vector(4, 4);
 
@@ -65,11 +65,11 @@ public class Nave extends VODynamic implements Runnable {
         }
     }
 
-    public double getVida() {
+    public int getVida() {
         return vida;
     }
 
-    public void setVida(double vida) {
+    public void setVida(int vida) {
         this.vida = vida;
     }
 

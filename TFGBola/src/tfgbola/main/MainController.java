@@ -86,4 +86,16 @@ public class MainController {
     public void sendGameOver() {
         this.tfg.sendGameOver();
     }
+    
+    public void sendVidaNave(int vida){
+        this.tfg.sendVidaNave(vida);
+    }
+
+    public int getVidaNave() {
+        return this.viewer.getNave().getVida();
+    }
+
+    public float getCuentaAtras() {
+        return this.viewer.CUENTA_ATRAS_MILIS;
+    }
 }

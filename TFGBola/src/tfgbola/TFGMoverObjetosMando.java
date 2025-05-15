@@ -22,6 +22,8 @@ public class TFGMoverObjetosMando {
         main = new MainController(this);
         Thread thComms = new Thread(comms);
         thComms.start();
+        sendNaveInitMessages();
+        sendRacingCarInitMessages();
     }
 
     public void getMsg(String msg) {
@@ -50,6 +52,19 @@ public class TFGMoverObjetosMando {
     
     public void reiniciar(){
         this.main.reiniciarJuego();
+    }
+    
+    public void sendVidaNave(int vida){
+        System.out.println("NEW VIDA: " + vida);
+        this.comms.sendMessage("vida", vida);
+    }
+    
+    public void sendNaveInitMessages(){
+        this.comms.sendNaveInitMessages(this.main.getVidaNave(), true);
+    }
+    
+    public void sendRacingCarInitMessages(){
+        this.comms.sendRacingCarInitMessages(this.main.getCuentaAtras());
     }
 
     public static void main(String[] args) {
