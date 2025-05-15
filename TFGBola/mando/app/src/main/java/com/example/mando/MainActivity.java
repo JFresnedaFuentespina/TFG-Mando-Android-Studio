@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean controllerInitialized = false;
     private boolean isMarchaAtras = false;
     private TextView textoCuentaAtras;
+
+    private float cuentaAtrasMilis;
     private CountDownTimer countDownTimer;
     // Atributos OnTouch layout carreras
     private float velocidad = 0f;
@@ -296,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void initCarLayout() {
         textoCuentaAtras = findViewById(R.id.textoCuentaAtras);
+        startCuentaAtras();
         isJoystickView = false;
         isCarView = true;
         // Configurar el botón de Settings
@@ -340,6 +343,8 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressLint("ClickableViewAccessibility")
     private void loadCarLayout() {
+        textoCuentaAtras = findViewById(R.id.textoCuentaAtras);
+        startCuentaAtras();
         // Configurar el botón de Settings
         ImageButton settings = findViewById(R.id.btnSettings);
         settings.setOnClickListener(new View.OnClickListener() {
@@ -999,7 +1004,12 @@ public class MainActivity extends AppCompatActivity {
      * y nos da la opción de cerrar el juego o de reiniciar la partida.
      */
     public void gameOver() {
-        new AlertDialog.Builder(this).setTitle("Game Over").setMessage("¿Qué deseas hacer?").setCancelable(false).setPositiveButton("Reiniciar", (dialog, which) -> reiniciarJuego()).setNegativeButton("Salir", (dialog, which) -> salir()).show();
+        new AlertDialog.Builder(this)
+                .setTitle("Game Over")
+                .setMessage("¿Qué deseas hacer?")
+                .setCancelable(false)
+                .setPositiveButton("Reiniciar", (dialog, which) -> reiniciarJuego())
+                .setNegativeButton("Salir", (dialog, which) -> salir()).show();
     }
 
     /**
@@ -1040,26 +1050,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setCuentaAtrasMilis(float cuentaAtrasMilis) {
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
+        this.cuentaAtrasMilis = cuentaAtrasMilis;
+    }
 
-        countDownTimer = new CountDownTimer((long) cuentaAtrasMilis, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                int seconds = (int) (millisUntilFinished / 1000);
-                int minutes = seconds / 60;
-                seconds = seconds % 60;
+    public void startCuentaAtras() {
+        runOnUiThread(() -> {
+            Log.d("CUENTA ATRÁS", cuentaAtrasMilis + "ms");
 
-                String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-                textoCuentaAtras.setText(timeFormatted);
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
             }
 
-            @Override
-            public void onFinish() {
-                textoCuentaAtras.setText("00:00");
-            }
-        }.start();
+            countDownTimer = new CountDownTimer((long) cuentaAtrasMilis, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    int seconds = (int) (millisUntilFinished / 1000);
+                    int minutes = seconds / 60;
+                    seconds = seconds % 60;
+
+                    String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+                    textoCuentaAtras.setText(timeFormatted);
+                }
+
+                @Override
+                public void onFinish() {
+                    textoCuentaAtras.setText("00:00");
+                    gameOver();
+                }
+            }.start();
+        });
     }
 
 }

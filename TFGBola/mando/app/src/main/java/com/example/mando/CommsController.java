@@ -117,6 +117,7 @@ public class CommsController implements Runnable {
                         break;
                     case "cuenta_atras":
                         main.setCuentaAtrasMilis(Float.parseFloat(obj));
+                        break;
                     default:
                         Log.d("NUEVO MENSAJE!!!", type);
                         break;
