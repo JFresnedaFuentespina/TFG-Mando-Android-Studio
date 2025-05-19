@@ -1,1 +1,0 @@
-* Git y GitHub: Herramienta utilizada para el control de versiones y el seguimiento del desarrollo del proyecto.
