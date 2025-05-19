@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -13,6 +14,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Clase para la gestión de los mensajes que recibe la app
@@ -78,7 +80,7 @@ public class CommsController implements Runnable {
             byte[] buffer = mensaje.getBytes();
 
             while (socket == null) { // Solo mientras no haya conexión
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName("192.168.1.36"), 8888);
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName("255.255.255.255"), 8888);
                 datagramSocket.send(packet);
                 Thread.sleep(2000); // Enviar cada 2 segundos
             }
@@ -92,47 +94,56 @@ public class CommsController implements Runnable {
     /**
      * Función que recibe un mensaje y lo según su tipo, ejecuta otras funciones
      */
-    private void readMessage() {
-        if (ois != null) {
-            try {
-                String jsonMessage = (String) ois.readObject();
-                JsonObject jsonObject = JsonParser.parseString(jsonMessage).getAsJsonObject();
-                String type = jsonObject.get("type").getAsString();
-                String obj = jsonObject.get("obj").getAsString();
-                Log.d("MENSAJE RECIBIDO!!!", type + " - " + obj);
-                switch (type) {
-                    case "vibration":
-                        main.vibration();
-                        break;
-                    case "aumentar_contador":
-                        break;
-                    case "GAME_OVER":
-                        main.runOnUiThread(() -> main.gameOver());
-                        break;
-                    case "vida_inicial":
-                        main.setVidaMaxima((int)Double.parseDouble(obj));
-                        break;
-                    case "vida":
-                        main.setLifeBar((int)Double.parseDouble(obj));
-                        break;
-                    case "cuenta_atras":
-                        main.setCuentaAtrasMilis(Float.parseFloat(obj));
-                        break;
-                    case "new_score":
-                        main.setScoreTextView(obj);
-                    default:
-                        Log.d("NUEVO MENSAJE!!!", type);
-                        break;
-                }
-            } catch (Exception e) {
-                Log.e("ERROR_MENSAJE", "Fallo en lectura del mensaje", e);
+    private boolean readMessage() {
+        if (ois == null || !shouldRun) return false;
+        try {
+            String jsonMessage = (String) ois.readObject();
+            JsonObject jsonObject = JsonParser.parseString(jsonMessage).getAsJsonObject();
+            String type = jsonObject.get("type").getAsString();
+            String obj = jsonObject.get("obj").getAsString();
+            Log.d("MENSAJE RECIBIDO!!!", type + " - " + obj);
+            switch (type) {
+                case "vibration":
+                    main.vibration();
+                    break;
+                case "aumentar_contador":
+                    break;
+                case "GAME_OVER":
+                    main.runOnUiThread(() -> main.gameOver());
+                    break;
+                case "vida_inicial":
+                    main.setVidaMaxima((int) Double.parseDouble(obj));
+                    break;
+                case "vida":
+                    main.setLifeBar((int) Double.parseDouble(obj));
+                    break;
+                case "cuenta_atras":
+                    main.setCuentaAtrasMilis(Float.parseFloat(obj));
+                    break;
+                case "new_score":
+                    main.setScoreTextView(obj);
+                default:
+                    Log.d("NUEVO MENSAJE!!!", type);
+                    break;
             }
+        } catch (SocketException se) {              // socket cerrado desde fuera
+            Log.i("Comms", "Socket cerrado, deteniendo hilo");
+            shouldRun = false;
+            return false;
+        } catch (EOFException | ClassNotFoundException e) {
+            Log.w("Comms", "Flujo terminado: " + e.getMessage());
+            shouldRun = false;
+            return false;
+        } catch (Exception e) {
+            Log.e("Comms", "Fallo en lectura", e);
+            return false;
         }
         try {
             Thread.sleep(50);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        return true;
     }
 
     /**
@@ -143,23 +154,21 @@ public class CommsController implements Runnable {
     public void run() {
         new Thread(this::sendBroadcastDatagram).start();
         acceptClient();
-        while (isConnected() && shouldRun) {
-            readMessage();
+        while (shouldRun) {
+            if (!readMessage()) break;
         }
     }
 
     public void close() {
+        shouldRun = false;
         try {
-            setConnected(false);
-            this.shouldRun = false;
-            if (this.ois != null) this.ois.close();
-            if (this.socket != null && !this.socket.isClosed()) this.socket.close();
-            if (this.serverSocket != null && !this.serverSocket.isClosed())
-                this.serverSocket.close();
-
+            if (ois != null) ois.close();
+            if (socket != null && !socket.isClosed()) socket.close();
+            if (serverSocket != null && !serverSocket.isClosed()) serverSocket.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Log.e("Comms", "Error al cerrar", e);
         }
     }
+
 
 }

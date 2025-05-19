@@ -115,7 +115,7 @@ public class CommsController implements Runnable {
             String mensaje = "PC_HOLA";
             byte[] buffer = mensaje.getBytes();
             DatagramPacket packet = new DatagramPacket(
-                    buffer, buffer.length, InetAddress.getByName("192.168.1.255"), 9999
+                    buffer, buffer.length, InetAddress.getByName("255.255.255.255"), 9999
             );
             datagramSocket.send(packet);
             System.out.println("Broadcast enviado a Android: PC_HOLA");

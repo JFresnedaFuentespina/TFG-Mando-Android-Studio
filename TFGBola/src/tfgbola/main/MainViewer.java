@@ -29,7 +29,7 @@ public class MainViewer extends JFrame implements Runnable {
     private ArrayList<Bala> balas;
     private ArrayList<Asteroide> asteroides;
     
-    public static final float CUENTA_ATRAS_MILIS = 120000;
+    public static final float CUENTA_ATRAS_MILIS = 5000;
 
     private int score;
 

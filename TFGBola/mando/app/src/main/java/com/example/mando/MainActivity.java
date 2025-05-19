@@ -570,11 +570,10 @@ public class MainActivity extends AppCompatActivity {
     public void setLifeBar(float vida) {
         this.vida = vida;
         Log.d("NUEVA VIDA DE LA NAVE!!! ", vida + "");
-        // Asegurar que la barra muestre bien el valor
-        barraVida.setProgress((int) this.vida);
 
         // Cambiar color según el porcentaje
         int color;
+
         if (vida <= 10) {
             color = Color.RED;
         } else if (vida <= 50) {
@@ -583,10 +582,14 @@ public class MainActivity extends AppCompatActivity {
             color = Color.GREEN;
         }
 
-        // Cambiar dinámicamente el color del drawable
-        LayerDrawable drawable = (LayerDrawable) barraVida.getProgressDrawable();
-        Drawable progress = drawable.findDrawableByLayerId(android.R.id.progress);
-        DrawableCompat.setTint(progress, color);
+        if (this.barraVida != null) {
+            // Asegurar que la barra muestre bien el valor
+            barraVida.setProgress((int) this.vida);
+            // Cambiar dinámicamente el color del drawable
+            LayerDrawable drawable = (LayerDrawable) barraVida.getProgressDrawable();
+            Drawable progress = drawable.findDrawableByLayerId(android.R.id.progress);
+            DrawableCompat.setTint(progress, color);
+        }
 
     }
 
@@ -608,7 +611,6 @@ public class MainActivity extends AppCompatActivity {
         barraVida = findViewById(R.id.lifeBar);
         score = findViewById(R.id.score);
         setScoreTextView("0");
-        setLifeBar(this.vida);
 
         FrameLayout mainLayout = new FrameLayout(this);
         mainLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -640,7 +642,7 @@ public class MainActivity extends AppCompatActivity {
         filaParams.topMargin = dp(16);
         filaTop.setLayoutParams(filaParams);
 
-        // --- barra de vida (300 × 30 dp) ---
+        // --- barra de vida (300×30dp) ---
         ViewGroup pv = (ViewGroup) barraVida.getParent();
         if (pv != null) pv.removeView(barraVida);
         FrameLayout.LayoutParams vidaLP =
@@ -720,6 +722,7 @@ public class MainActivity extends AppCompatActivity {
         mainLayout.addView(settingsButton);
 
         setContentView(mainLayout);
+        setLifeBar(this.vida);
         startConnectionP2P();
     }
 
@@ -1076,8 +1079,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private void reiniciarJuego() {
         Log.d("REINICIAR!!!!!", "REINICIAR!!!!!");
+        Log.d("JOYSTICK????", isJoystickView + "");
         sendMessageGson(new Message("reset", "reset").toGson());
-        initRemoteController();
+        if(isJoystickView){
+            initRemoteController();
+        }
+        else{
+            initCarLayout();
+        }
     }
 
     public void setCuentaAtrasMilis(float cuentaAtrasMilis) {

@@ -5,4 +5,4 @@ El proyecto está formado por dos sistemas principales que trabajan de forma coo
 [[Arquitectura general]]
 [[Flujo de funcionamiento]]
 
-![[arquitectura_tfg.png]]
+![[Anexos/arquitectura_tfg.png]]
