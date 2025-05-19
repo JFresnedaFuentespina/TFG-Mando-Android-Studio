@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,7 +28,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private int buttonAY = 550;
     private int joystickX = 350;
     private int joystickY = 700;
+    private TextView score;
 
     // Posiciones y escala de los botones del mando del coche
     private float scaleAcelerador = 1.0f;
@@ -601,6 +606,8 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setLooping(false);
 
         barraVida = findViewById(R.id.lifeBar);
+        score = findViewById(R.id.score);
+        setScoreTextView("0");
         setLifeBar(this.vida);
 
         FrameLayout mainLayout = new FrameLayout(this);
@@ -620,12 +627,37 @@ public class MainActivity extends AppCompatActivity {
 
         mainLayout.addView(joystickView);
 
-        ViewGroup parent = (ViewGroup) barraVida.getParent();
-        if (parent != null) {
-            parent.removeView(barraVida);
-        }
-        mainLayout.addView(barraVida);
+        LinearLayout filaTop = new LinearLayout(this);
+        filaTop.setOrientation(LinearLayout.HORIZONTAL);
+        filaTop.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
 
+        // margen exterior de la fila
+        FrameLayout.LayoutParams filaParams =
+                new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT);
+        filaParams.leftMargin = dp(16);
+        filaParams.topMargin = dp(16);
+        filaTop.setLayoutParams(filaParams);
+
+        // --- barra de vida (300 × 30 dp) ---
+        ViewGroup pv = (ViewGroup) barraVida.getParent();
+        if (pv != null) pv.removeView(barraVida);
+        FrameLayout.LayoutParams vidaLP =
+                new FrameLayout.LayoutParams(dp(300), dp(30));
+        barraVida.setLayoutParams(vidaLP);
+        filaTop.addView(barraVida);
+
+        // espaciador 16 dp
+        Space spacer = new Space(this);
+        spacer.setLayoutParams(new LinearLayout.LayoutParams(dp(16), 0));
+        filaTop.addView(spacer);
+
+        // --- marcador ---
+        ViewGroup ps = (ViewGroup) score.getParent();
+        if (ps != null) ps.removeView(score);
+        filaTop.addView(score);
+        mainLayout.addView(filaTop);
 
         // Aplicar el centro del joystick
         joystickView.post(new Runnable() {
@@ -690,6 +722,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(mainLayout);
         startConnectionP2P();
     }
+
+    private int dp(int v) {
+        return (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, v, getResources().getDisplayMetrics());
+    }
+
 
     private void startConnectionP2P() {
         if (!controllerInitialized) {
@@ -923,10 +961,6 @@ public class MainActivity extends AppCompatActivity {
         vibrator.vibrate(vibrate, -1);
     }
 
-    public void setVidaJoystick() {
-
-    }
-
     /**
      * Función que sirve para enviar el objeto Vector velocidad que se calcula en el Joystick.
      */
@@ -934,9 +968,6 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d("OOS NULL? ", (oos == null) + "");
-                Log.d("JOYSTICK?", isJoystickView + "");
-                Log.d("IS CONNECTED? ", isConnected + "");
                 while (isJoystickView) {
                     try {
                         if (oos != null && isConnected) {
@@ -971,7 +1002,7 @@ public class MainActivity extends AppCompatActivity {
                 synchronized (oos) {
                     try {
                         if (oos != null) {
-                            Log.d("MENSAJE: ", msg);
+                            //Log.d("MENSAJE: ", msg);
                             oos.writeObject(msg);
                             oos.flush();
                         }
@@ -1080,5 +1111,16 @@ public class MainActivity extends AppCompatActivity {
             }.start();
         });
     }
+
+    public void setScoreTextView(String scoreStr) {
+        runOnUiThread(() -> {
+            if (score != null) {
+                score.setText("Score: " + scoreStr);
+            } else {
+                Log.w("UI", "Score TextView no está inicializado");
+            }
+        });
+    }
+
 
 }

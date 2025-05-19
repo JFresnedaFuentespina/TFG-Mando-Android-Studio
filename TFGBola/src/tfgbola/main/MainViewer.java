@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import tfgbola.main.objects.Asteroide;
 import tfgbola.main.objects.Bala;
 import tfgbola.main.objects.Car;
@@ -207,6 +205,7 @@ public class MainViewer extends JFrame implements Runnable {
     public void aumentarScore() {
         this.score += 1;
         this.mainPanel.actualizarScore(score);
+        this.mainController.sendScore(score);
     }
 
     public void actualizarScore(int score) {

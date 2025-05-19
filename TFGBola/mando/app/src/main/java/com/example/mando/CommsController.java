@@ -78,7 +78,7 @@ public class CommsController implements Runnable {
             byte[] buffer = mensaje.getBytes();
 
             while (socket == null) { // Solo mientras no haya conexión
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName("255.255.255.255"), 8888);
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName("192.168.1.36"), 8888);
                 datagramSocket.send(packet);
                 Thread.sleep(2000); // Enviar cada 2 segundos
             }
@@ -118,6 +118,8 @@ public class CommsController implements Runnable {
                     case "cuenta_atras":
                         main.setCuentaAtrasMilis(Float.parseFloat(obj));
                         break;
+                    case "new_score":
+                        main.setScoreTextView(obj);
                     default:
                         Log.d("NUEVO MENSAJE!!!", type);
                         break;

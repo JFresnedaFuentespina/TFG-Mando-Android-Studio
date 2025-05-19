@@ -1,0 +1,2 @@
+[[Requisitos del sistema]]
+[[Instalación]]

@@ -76,4 +76,8 @@ public class TFGMoverObjetosMando {
         System.exit(0);
     }
 
+    public void sendScore(int score) {
+        this.comms.sendMessage("new_score", score);
+    }
+
 }

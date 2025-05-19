@@ -98,4 +98,8 @@ public class MainController {
     public float getCuentaAtras() {
         return this.viewer.CUENTA_ATRAS_MILIS;
     }
+
+    public void sendScore(int score) {
+        this.tfg.sendScore(score);
+    }
 }

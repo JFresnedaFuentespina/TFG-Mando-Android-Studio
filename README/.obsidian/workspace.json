@@ -1,0 +1,206 @@
+{
+  "main": {
+    "id": "6176af8d70679119",
+    "type": "split",
+    "children": [
+      {
+        "id": "108fe436bc08a72b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a9590fbf0fd6d033",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Planificación tareas/Planificación de las tareas.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Planificación de las tareas"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5e2a99f53edf3901",
+    "type": "split",
+    "children": [
+      {
+        "id": "cd6d9612e9550e48",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "61994584ee4d4113",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de archivos"
+            }
+          },
+          {
+            "id": "cdcd25b01c33ac1d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Buscar"
+            }
+          },
+          {
+            "id": "88ebd5f90cc61c0a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 513.5
+  },
+  "right": {
+    "id": "c8f0b8317fdb8f10",
+    "type": "split",
+    "children": [
+      {
+        "id": "45553630f5dfe035",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "694709eb1c5e195f",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Desarrollo de un Sistema de Control Remoto para Juegos en Java mediante una Aplicación Android.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Enlaces entrantes de Desarrollo de un Sistema de Control Remoto para Juegos en Java mediante una Aplicación Android"
+            }
+          },
+          {
+            "id": "0139d9eb930176c0",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Desarrollo de un Sistema de Control Remoto para Juegos en Java mediante una Aplicación Android.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enlaces salientes de Desarrollo de un Sistema de Control Remoto para Juegos en Java mediante una Aplicación Android"
+            }
+          },
+          {
+            "id": "eeafa391d2aa15b7",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "e1d575762773a475",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Desarrollo de un Sistema de Control Remoto para Juegos en Java mediante una Aplicación Android.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema de Desarrollo de un Sistema de Control Remoto para Juegos en Java mediante una Aplicación Android"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir selector rápido": false,
+      "graph:Abrir vista gráfica": false,
+      "canvas:Crear nuevo lienzo": false,
+      "daily-notes:Abrir la nota de hoy": false,
+      "templates:Insertar plantilla": false,
+      "command-palette:Abrir paleta de comandos": false
+    }
+  },
+  "active": "a9590fbf0fd6d033",
+  "lastOpenFiles": [
+    "Índice.md",
+    "Conclusión.md",
+    "Planificación tareas/Planificación de las tareas.md",
+    "Planificación tareas/Implementación de la comunicación entre dispositivos.md",
+    "Planificación tareas/Análisis y definición del proyecto.md",
+    "Descripción del proyecto.md",
+    "Desarrollo de un Sistema de Control Remoto para Juegos en Java mediante una Aplicación Android.md",
+    "Descripción de los módulos o ítems desarrollados.md",
+    "Manual/Manual de usuario.md",
+    "Manual/Instalación.md",
+    "Descripción de la arquitectura/Descripción de la arquitectura del proyecto.md",
+    "Descripción de la arquitectura/Flujo de funcionamiento.md",
+    "Descripción de la arquitectura/Arquitectura general.md",
+    "Descripción del entorno/Descripción del entorno tecnológico y las herramientas utilizadas.md",
+    "Descripción del entorno/Pruebas y ejecución.md",
+    "Descripción del entorno/Control de versiones.md",
+    "Descripción del entorno/Comunicación en red.md",
+    "Descripción del entorno/Herramientas de diseño de interfaz.md",
+    "Descripción del entorno/Entorno de desarrollo.md",
+    "Descripción del entorno/Lenguajes de programación.md",
+    "Planificación tareas/Pruebas y validación.md",
+    "Planificación tareas/Documentación del proyecto.md",
+    "Planificación tareas/Desarrollo del juego de prueba en Java.md",
+    "Planificación tareas/Desarrollo del mando en Android.md",
+    "Manual/Requisitos del sistema.md",
+    "Manual",
+    "arquitectura_tfg.png",
+    "Descripción de la arquitectura/Componentes principales.md",
+    "Descripción de la arquitectura",
+    "Descripción del entorno",
+    "Planificación tareas",
+    "Descripción del proyecto"
+  ]
+}
