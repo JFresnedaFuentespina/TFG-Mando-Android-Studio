@@ -29,7 +29,7 @@ public class MainViewer extends JFrame implements Runnable {
     private ArrayList<Bala> balas;
     private ArrayList<Asteroide> asteroides;
 
-    public static final float CUENTA_ATRAS_MILIS = 12000;
+    public static final float CUENTA_ATRAS_MILIS = 120000;
 
     private int score;
 
@@ -181,12 +181,14 @@ public class MainViewer extends JFrame implements Runnable {
         for (Bala bala : balas) {
             if (isOutsideBounds(bala.getPosicion())) {
                 balasToRemove.add(bala);
+                bala.explode();
             }
         }
 
         for (Asteroide asteroide : asteroides) {
             if (isOutsideBounds(asteroide.getPosicion())) {
                 asteroidesToRemove.add(asteroide);
+                asteroide.explode();
             }
         }
 

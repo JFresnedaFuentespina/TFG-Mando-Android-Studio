@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -609,10 +610,6 @@ public class MainActivity extends AppCompatActivity {
         progressBarConnect = findViewById(R.id.progressBarConnect);
 
 
-        barraVida = findViewById(R.id.lifeBar);
-        score = findViewById(R.id.score);
-        setScoreTextView("0");
-
         FrameLayout mainLayout = new FrameLayout(this);
         mainLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         //mainLayout.setBackground(getDrawable(R.drawable.space_background));
@@ -640,26 +637,49 @@ public class MainActivity extends AppCompatActivity {
         filaParams.topMargin = dp(16);
         filaTop.setLayoutParams(filaParams);
 
-        // --- barra de vida (300×30dp) ---
+        // barra de vida (300×30dp)
+        setContentView(R.layout.activity_main); // Debe contener R.id.lifeBar
+        barraVida = findViewById(R.id.lifeBar);
+
         ViewGroup pv = (ViewGroup) barraVida.getParent();
         if (pv != null) pv.removeView(barraVida);
         FrameLayout.LayoutParams vidaLP = new FrameLayout.LayoutParams(dp(300), dp(30));
         barraVida.setLayoutParams(vidaLP);
         filaTop.addView(barraVida);
 
-        // espaciador 16 dp
+        // espaciador 16dp
         Space spacer = new Space(this);
         spacer.setLayoutParams(new LinearLayout.LayoutParams(dp(16), 0));
         filaTop.addView(spacer);
 
-        // --- marcador ---
+        // marcador
+        score = findViewById(R.id.score);
+        setScoreTextView("0");
         ViewGroup ps = (ViewGroup) score.getParent();
         if (ps != null) ps.removeView(score);
         filaTop.addView(score);
         mainLayout.addView(filaTop);
 
-        ViewGroup pbConnect = (ViewGroup) progressBarConnect.getParent();
-        if (pbConnect != null) pbConnect.removeView(progressBarConnect);
+        // Spinner connect
+        if (progressBarConnect == null) {
+            progressBarConnect =
+                    new ProgressBar(this, null, android.R.attr.progressBarStyleLarge);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.gravity = Gravity.CENTER;
+            progressBarConnect.setLayoutParams(lp);
+        }
+
+        ViewParent pbParent = progressBarConnect.getParent();
+        if (pbParent instanceof ViewGroup) {
+            ((ViewGroup) pbParent).removeView(progressBarConnect);
+        }
+        if(isConnected){
+            hideSpinner();
+        }else{
+            showSpinner();
+        }
         mainLayout.addView(progressBarConnect);
 
         // Aplicar el centro del joystick
@@ -725,6 +745,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(mainLayout);
         setLifeBar(this.vida);
         startConnectionP2P();
+        startSendingVector();
     }
 
     private int dp(int v) {
