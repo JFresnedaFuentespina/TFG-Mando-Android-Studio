@@ -28,7 +28,7 @@ public class MainViewer extends JFrame implements Runnable {
     private Car car;
     private ArrayList<Bala> balas;
     private ArrayList<Asteroide> asteroides;
-    
+
     public static final float CUENTA_ATRAS_MILIS = 5000;
 
     private int score;
@@ -43,20 +43,22 @@ public class MainViewer extends JFrame implements Runnable {
         this.setVisible(true);
     }
 
+    // Función para añadir los objetos al panel
     public void addPanel() {
-        // Añadimos la nave y el coche al panel
         this.mainPanel = new MainPanel(this);
         this.mainPanel.setNave(nave);
         this.mainPanel.setCar(car);
         this.add(mainPanel);
     }
 
+    // Función para reiniciar el panel
     public void reiniciarPanel() {
         this.mainPanel.reiniciarJuego(this);
         this.mainPanel.setNave(nave);
         this.mainPanel.setCar(car);
     }
 
+    // Función para crear los hilos que pintan los objetos en el panel
     public void createThreads() {
         // Inicializamos la nave
         this.nave = mainController.setNaveViewer();
@@ -69,12 +71,14 @@ public class MainViewer extends JFrame implements Runnable {
         thCar.start();
     }
 
+    // Función para reiniciar el juego
     public void reiniciarJuego(MainController aThis) {
         initObjects(aThis);
         createThreads();
         reiniciarPanel();
     }
 
+    // Función para inicializar los objetos que se pintan
     public void initObjects(MainController aThis) {
         this.score = 0;
         this.mainController = aThis;
@@ -82,6 +86,7 @@ public class MainViewer extends JFrame implements Runnable {
         this.asteroides = new ArrayList<>();
     }
 
+    // Función para añadir una bala al panel
     public void addBalaToPanel(Bala bala) {
         this.balas.add(bala);
         this.mainPanel.addBala(bala);
@@ -101,17 +106,16 @@ public class MainViewer extends JFrame implements Runnable {
         this.mainPanel.paint();
     }
 
+    // Función para crear un asteroide
     public void generarAsteroide() {
         Asteroide asteroide = new Asteroide();
         asteroides.add(asteroide);
         mainController.addAsteroide(asteroide);
     }
-    
-    
 
     @Override
     public void run() {
-        long lastAsteroidTime = System.currentTimeMillis(); // Tiempo del último asteroide generado
+        long lastAsteroidTime = System.currentTimeMillis();
         while (true) {
             try {
                 long currentTime = System.currentTimeMillis();
@@ -125,16 +129,16 @@ public class MainViewer extends JFrame implements Runnable {
                     actualizarJuego();
                 }
                 // Solicitar repintado de la interfaz gráfica
-                this.mainPanel.paint();  // Esto actualizará la pantalla sin llamar directamente a paint()
-                Thread.sleep(20); // Control del FPS
+                this.mainPanel.paint();
+                Thread.sleep(20);
             } catch (InterruptedException ex) {
                 Logger.getLogger(MainViewer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
+    // Función para actualizar los objetos del juego
     private void actualizarJuego() {
-        // Actualizar las posiciones de los objetos (por ejemplo, balas y asteroides)
         for (Bala bala : balas) {
             bala.mover();  // Mueve las balas
         }
@@ -148,7 +152,6 @@ public class MainViewer extends JFrame implements Runnable {
             boolean addscore = false;
             for (Asteroide asteroide : asteroides) {
                 if (checkImpacto(bala, asteroide)) {
-                    System.out.println("Colisión detectada entre bala y asteroide!");
                     // Marcar para eliminar los asteroides y balas que han colisionado
                     asteroidesToRemove.add(asteroide);
                     balasToRemove.add(bala);
@@ -165,7 +168,6 @@ public class MainViewer extends JFrame implements Runnable {
         for (Asteroide asteroide : asteroides) {
             if (checkImpacto(nave, asteroide)) {
                 asteroidesToRemove.add(asteroide);
-                System.out.println("Colisión detectada entre nave y asteroide!");
                 this.nave.damage(asteroide.getRadio());
                 this.mainController.sendVidaNave(this.nave.getVida());
                 if (!this.nave.isIsAlive()) {
@@ -178,13 +180,13 @@ public class MainViewer extends JFrame implements Runnable {
         // Verificar si alguna bala o asteroide se ha salido de los márgenes de la ventana
         for (Bala bala : balas) {
             if (isOutsideBounds(bala.getPosicion())) {
-                balasToRemove.add(bala);  // Eliminar la bala fuera de los límites
+                balasToRemove.add(bala);
             }
         }
 
         for (Asteroide asteroide : asteroides) {
             if (isOutsideBounds(asteroide.getPosicion())) {
-                asteroidesToRemove.add(asteroide);  // Eliminar el asteroide fuera de los límites
+                asteroidesToRemove.add(asteroide);
             }
         }
 
@@ -197,9 +199,8 @@ public class MainViewer extends JFrame implements Runnable {
         mainController.setBalas(balas);
     }
 
-// Método para verificar si un objeto está fuera de los límites de la ventana (900x900)
+    // Función para verificar si un objeto está fuera de los límites de la ventana
     private boolean isOutsideBounds(Vector posicion) {
-        // Verificamos si la posición del objeto está fuera de la ventana de 900x900
         return posicion.getX() < 0 || posicion.getX() > 900 || posicion.getY() < 0 || posicion.getY() > 900;
     }
 
@@ -213,6 +214,7 @@ public class MainViewer extends JFrame implements Runnable {
         this.mainPanel.actualizarScore(score);
     }
 
+    // Función para comprobar posibles impactos entre objetos y asteroides
     public boolean checkImpacto(Object object, Asteroide asteroide) {
         boolean impact = false;
         if (object instanceof Bala) {
@@ -221,8 +223,8 @@ public class MainViewer extends JFrame implements Runnable {
             Vector posBala = bala.getPosicion();
             Vector posAsteroide = asteroide.getPosicion();
             // Obtener el radio de la bala y el asteroide
-            double radioBala = bala.getRadio();  // Radio de la bala
-            double radioAsteroide = asteroide.getRadio();  // Radio del asteroide
+            double radioBala = bala.getRadio();
+            double radioAsteroide = asteroide.getRadio();
             // Calcular la distancia entre la bala y el asteroide
             double distancia = posBala.distanceTo(posAsteroide);
             // Si la distancia es menor que la suma de los radios, se considera un impacto

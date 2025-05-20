@@ -22,7 +22,7 @@ public class Bala extends VODynamic implements Runnable {
 
     private MainModel model;
 
-    public Bala(Vector velocidad) {  // Recibe el ángulo al crearse
+    public Bala(Vector velocidad) {
         super();
         try {
             BufferedImage img = ImageIO.read(getClass().getResource("/resources/bala.png"));
@@ -79,7 +79,7 @@ public class Bala extends VODynamic implements Runnable {
     public synchronized void pintar(Graphics g) {
         if (super.getImage() != null) {
             // Asegurarse de que el ángulo está actualizado
-            rotate();  // Llamar al método para actualizar el ángulo de rotación
+            rotate();
 
             // Calcular la posición de la imagen
             int posicionX = (int) (this.getPosicion().getX() - this.getRadio());
@@ -100,7 +100,7 @@ public class Bala extends VODynamic implements Runnable {
             // Restaurar el estado original de la transformación para evitar afectar otros objetos
             g2d.setTransform(originalTransform);
         }
-        mover();  // Mueve el objeto
+        mover();
     }
 
     @Override

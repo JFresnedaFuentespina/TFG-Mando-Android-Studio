@@ -26,10 +26,6 @@ public class TFGMoverObjetosMando {
         sendRacingCarInitMessages();
     }
 
-    public void getMsg(String msg) {
-        System.out.println(msg);
-    }
-
     public void getVelocidadNave(Vector velocidad) {
         main.setVelocidadNave(velocidad);
     }
@@ -55,7 +51,6 @@ public class TFGMoverObjetosMando {
     }
     
     public void sendVidaNave(int vida){
-        System.out.println("NEW VIDA: " + vida);
         this.comms.sendMessage("vida", vida);
     }
     

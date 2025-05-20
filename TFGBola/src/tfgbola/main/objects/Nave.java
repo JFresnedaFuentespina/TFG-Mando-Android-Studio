@@ -13,7 +13,7 @@ import tfgbola.main.MainModel;
 
 /**
  *
- * @author jesus
+ * @author Jesús Fresneda Fuentespina
  */
 public class Nave extends VODynamic implements Runnable {
 
@@ -137,7 +137,7 @@ public class Nave extends VODynamic implements Runnable {
     public void pintar(Graphics g) {
         if (super.getImage() != null) {
             // Asegurarse de que el ángulo está actualizado
-            rotate();  // Llamar al método para actualizar el ángulo de rotación
+            rotate();
 
             // Calcular la posición de la imagen
             int posicionX = (int) (this.getPosicion().getX() - this.getRadio());
@@ -158,7 +158,7 @@ public class Nave extends VODynamic implements Runnable {
             // Restaurar el estado original de la transformación para evitar afectar otros objetos
             g2d.setTransform(originalTransform);
         }
-        mover();  // Mueve el objeto
+        mover();
     }
 
     @Override

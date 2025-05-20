@@ -30,16 +30,17 @@ public class MainController {
         viewerTh.start();
     }
 
+    // Función para reiniciar la partida
     public void reiniciarJuego(){
         this.model = new MainModel(this);
         this.viewer.reiniciarJuego(this);
     }
-
+    
     public MainModel getModel() {
         return this.model;
     }
 
-    public Nave getBola() {
+    public Nave getNave() {
         return this.model.getNave();
     }
 

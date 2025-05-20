@@ -35,7 +35,7 @@ public class Asteroide extends VODynamic implements Runnable {
 
             // Generar asteroide en un borde aleatorio
             double posX, posY;
-            int edge = (int) (Math.random() * 4); // 0 = arriba, 1 = abajo, 2 = izquierda, 3 = derecha
+            int edge = (int) (Math.random() * 4);
 
             switch (edge) {
                 case 0: // Arriba
@@ -105,7 +105,7 @@ public class Asteroide extends VODynamic implements Runnable {
     public synchronized void pintar(Graphics g) {
         if (super.getImage() != null) {
             // Asegurarse de que el ángulo está actualizado
-            rotate();  // Llamar al método para actualizar el ángulo de rotación
+            rotate();
 
             // Calcular la posición de la imagen
             int posicionX = (int) (this.getPosicion().getX() - this.getRadio());
@@ -126,7 +126,7 @@ public class Asteroide extends VODynamic implements Runnable {
             // Restaurar el estado original de la transformación para evitar afectar otros objetos
             g2d.setTransform(originalTransform);
         }
-        mover();  // Mueve el objeto
+        mover();
     }
 
     @Override

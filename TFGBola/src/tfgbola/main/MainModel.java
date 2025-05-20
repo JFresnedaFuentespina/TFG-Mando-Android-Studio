@@ -5,7 +5,6 @@
 package tfgbola.main;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import tfgbola.main.objects.Asteroide;
 import tfgbola.main.objects.Bala;
 import tfgbola.main.objects.Car;
@@ -38,13 +37,12 @@ public class MainModel {
         this.car.setModel(this);
     }
 
+    // Función para calcular la nueva posición de la nave
     public Vector calcNewPositions(VODynamic obj) {
-        // Obtener la posición, velocidad y aceleración actuales del objeto
         Vector oldPosition = obj.getPosicion();       // Posición anterior
         Vector velocity = obj.getVelocidad();         // Velocidad
         Vector acceleration = obj.getAceleracion();   // Aceleración
 
-        // Suponiendo un intervalo de tiempo (ajustable según lo que necesites)
         double deltaTime = 0.5;
 
         // Calcular el desplazamiento por velocidad
@@ -59,78 +57,39 @@ public class MainModel {
         return newPosition;
     }
 
-public Vector calcNewPositionsCar(Car obj) {
-    Vector oldPosition = obj.getPosicion();
-    float velocidad = obj.getVelocidadCar();
-    float angulo = obj.getAngulo();
-    double deltaTime = 0.5;
-    //System.out.println(">>> Velocidad: " + velocidad + " | Ángulo: " + angulo);
-    
-    // Convertir el ángulo a radianes
-    double rad = Math.toRadians(angulo);
-    
-    // Calcular el desplazamiento en X y Y usando trigonometría
-    double dx = velocidad * Math.cos(rad) * deltaTime;
-    double dy = velocidad * Math.sin(rad) * deltaTime;
+    // Función para calcular la nueva posición del coche
+    public Vector calcNewPositionsCar(Car obj) {
+        Vector oldPosition = obj.getPosicion();
+        float velocidad = obj.getVelocidadCar();
+        float angulo = obj.getAngulo();
+        double deltaTime = 0.5;
 
-    // Crear el vector de desplazamiento
-    Vector desplazamiento = new Vector(dx, dy);
+        // Convertir el ángulo a radianes
+        double rad = Math.toRadians(angulo);
 
-    // Calcular la nueva posición
-    Vector newPosition = oldPosition.add(desplazamiento);
-    //System.out.println(">>> Desplazamiento: " + desplazamiento);
-    
-    // Restringir la nueva posición a los límites de la pantalla
-    int maxWidth = 900; // Ancho máximo de la pantalla
-    int maxHeight = 900; // Alto máximo de la pantalla
+        // Calcular el desplazamiento en X y Y usando trigonometría
+        double dx = velocidad * Math.cos(rad) * deltaTime;
+        double dy = velocidad * Math.sin(rad) * deltaTime;
 
-    // Asegurarse de que la nueva posición no se salga de los límites
-    double newX = Math.min(Math.max(0, newPosition.getX()), maxWidth);
-    double newY = Math.min(Math.max(0, newPosition.getY()), maxHeight);
+        // Crear el vector de desplazamiento
+        Vector desplazamiento = new Vector(dx, dy);
 
-    // Crear el nuevo vector de posición restringida
-    Vector restrictedPosition = new Vector(newX, newY);
-    
-    //System.out.println(">>> NEW POSITION CAR (restringida): " + restrictedPosition);
-    
-    return restrictedPosition;
-}
+        // Calcular la nueva posición
+        Vector newPosition = oldPosition.add(desplazamiento);
+        //System.out.println(">>> Desplazamiento: " + desplazamiento);
 
-    // Método para resetear la nave a su estado inicial
-    public void resetNave() {
-        // Resetear la posición de la nave
-        this.nave.setPosicion(new Vector(400, 400)); // O cualquier posición inicial deseada
-        this.nave.setVelocidad(new Vector(0, 0)); // La nave está quieta al reiniciar
-        this.nave.setAnguloRotacion(0); // Angulo de rotación inicial (por ejemplo)
-    }
+        // Restringir la nueva posición a los límites de la pantalla
+        int maxWidth = 900; // Ancho máximo de la pantalla
+        int maxHeight = 900; // Alto máximo de la pantalla
 
-    // Método para limpiar las balas y asteroides
-    public void limpiarBalasYAsteroides() {
-        this.balas.clear(); // Limpiar las balas
-        this.asteroides.clear(); // Limpiar los asteroides
-    }
+        // Asegurarse de que la nueva posición no se salga de los límites
+        double newX = Math.min(Math.max(0, newPosition.getX()), maxWidth);
+        double newY = Math.min(Math.max(0, newPosition.getY()), maxHeight);
 
-    public boolean checkImpacto(VODynamic src, VODynamic dst) {
-        // Obtener la posición y el radio de la bala
-        Vector posicionBala = src.getPosicion();
-        double radioBala = src.getRadio();
+        // Crear el nuevo vector de posición restringida
+        Vector restrictedPosition = new Vector(newX, newY);
 
-        // Obtener la posición y el radio del asteroide
-        Vector posicionDst = dst.getPosicion();
-        double radioDst = dst.getRadio();
-
-        // Calcular la distancia entre los centros de la bala y el asteroide
-        double distanciaX = posicionBala.getX() - posicionDst.getX();
-        double distanciaY = posicionBala.getY() - posicionDst.getY();
-        double distancia = Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
-
-        // Comprobar si la distancia es menor o igual a la suma de los radios (colisión)
-        if (distancia <= radioBala + radioDst) {
-            System.out.println("¡Colisión detectada contra un asteroide!");
-            return true;
-        } else {
-            return false;
-        }
+        return restrictedPosition;
     }
 
     public Nave getNave() {
@@ -165,8 +124,8 @@ public Vector calcNewPositionsCar(Car obj) {
     public void setCarAngle(float angulo) {
         this.car.setAngulo(angulo);
     }
-    
-    public void setCarVelocidad(float velocidad){
+
+    public void setCarVelocidad(float velocidad) {
         this.car.setVelocidadCar(velocidad);
     }
 }

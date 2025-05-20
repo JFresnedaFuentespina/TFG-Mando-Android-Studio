@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 
 /**
  *
- * @author Nitropc
+ * @author Jesús Fresneda Fuentespina
  */
 public class Message {
 

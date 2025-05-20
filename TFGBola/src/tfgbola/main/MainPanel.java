@@ -10,9 +10,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
-import java.util.Iterator;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import tfgbola.main.objects.Asteroide;
 import tfgbola.main.objects.Bala;
 import tfgbola.main.objects.Car;
@@ -37,10 +34,12 @@ public class MainPanel extends Canvas {
         this.setSize(900, 900);
     }
 
+    // Función para reiniciar el panel
     public void reiniciarJuego(MainViewer mainViewer) {
         initObjects(mainViewer);
     }
 
+    // Función para inicializar los objetos del panel
     public void initObjects(MainViewer mainViewer) {
         this.score = 0;
         this.mainViewer = mainViewer;
@@ -52,6 +51,7 @@ public class MainPanel extends Canvas {
         this.score = score;
     }
 
+    // Función para pintar el panel
     public void paint() {
         BufferStrategy bufferStrategy = this.getBufferStrategy();
 

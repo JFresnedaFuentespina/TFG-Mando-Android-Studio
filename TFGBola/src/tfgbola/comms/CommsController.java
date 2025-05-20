@@ -62,17 +62,19 @@ public class CommsController implements Runnable {
         }
     }
 
+    // Función que envía la información inicial del mando para la plantilla del joystick
     public void sendNaveInitMessages(double vida, boolean hasScore) {
         sendMessage("vibration", "vibration");
         sendMessage("vida_inicial", vida);
-        sendMessage("hasScore", hasScore);
     }
 
+    // Función que envía la información inicial del mando para la plantilla del coche de carreras
     public void sendRacingCarInitMessages(float cuentaAtras) {
         sendMessage("vibration", "vibration");
         sendMessage("cuenta_atras", cuentaAtras);
     }
 
+    // Función que envía un mensaje al mando
     public void sendMessage(String type, Object msg) {
         Message message = new Message(type, msg);
         if (oos != null) {
@@ -86,6 +88,7 @@ public class CommsController implements Runnable {
         }
     }
 
+    // Función para aceptar la conexión de un cliente a nuestro servidor
     public void acceptClient() {
         try {
             System.out.println("Servidor escuchando en el puerto 10000...");
@@ -97,6 +100,10 @@ public class CommsController implements Runnable {
         }
     }
 
+    // Función que obtiene el datagrama broadcast del servidor de Android 
+    // para descubrir la Ip y establecer la conexión
+    // Después de 5 intentos, si no la encuentra, se establece 
+    // la ip de forma manual
     private String discoverAndroidIp() {
         try (DatagramSocket socket = new DatagramSocket(8888)) {
             socket.setSoTimeout(10000); // Espera hasta 10 segundos
@@ -124,6 +131,7 @@ public class CommsController implements Runnable {
         return null;
     }
 
+    // Función que lee la Ip por consola
     public String insertarIpManual() {
         String ip = "";
         System.out.println("Introduce la IP del dispositivo Android: ");
@@ -133,6 +141,8 @@ public class CommsController implements Runnable {
         return ip;
     }
 
+    // Función que envía un broadcast para el cliente en Android
+    // se pueda conectar con nuestro servidor
     public void broadcastToAndroid() {
         try (DatagramSocket datagramSocket = new DatagramSocket()) {
             datagramSocket.setBroadcast(true);
@@ -183,11 +193,9 @@ public class CommsController implements Runnable {
                                 main.setCarVelocidad(Float.parseFloat(gson.fromJson(jsonObject.get("obj"), String.class)));
                                 break;
                             case "reset":
-                                System.out.println("RESET!!");
                                 main.reiniciar();
                                 break;
                             case "EXIT":
-                                System.out.println("EXIT!!");
                                 this.close();
                         }
 
@@ -210,6 +218,7 @@ public class CommsController implements Runnable {
         }
     }
 
+    // Función para cerrar la conexión
     public void close() {
         try {
             this.oos.close();
