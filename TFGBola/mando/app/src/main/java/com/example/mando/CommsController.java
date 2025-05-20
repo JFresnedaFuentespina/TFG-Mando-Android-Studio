@@ -31,7 +31,6 @@ public class CommsController implements Runnable {
 
 
     private MainActivity main;
-
     public CommsController(MainActivity main) {
         try {
             this.shouldRun = true;

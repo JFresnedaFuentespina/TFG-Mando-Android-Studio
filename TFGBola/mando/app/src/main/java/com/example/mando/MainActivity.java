@@ -17,6 +17,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -47,6 +48,7 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
     // DECLARACIÓN DE VARIABLES
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private Socket socket;
     private boolean isConnected;
     private CommsController server;
+    private int intentos;
     // Joystick
     private boolean isJoystickView = true;
     private float vida;
@@ -106,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint({"UseCompatLoadingForDrawables"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        isConnected = false;
+        this.isConnected = false;
+        this.intentos = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initRemoteController();
@@ -634,10 +638,7 @@ public class MainActivity extends AppCompatActivity {
         filaTop.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
 
         // margen exterior de la fila
-        FrameLayout.LayoutParams filaParams =
-                new FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        FrameLayout.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams filaParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         filaParams.leftMargin = dp(16);
         filaParams.topMargin = dp(16);
         filaTop.setLayoutParams(filaParams);
@@ -645,8 +646,7 @@ public class MainActivity extends AppCompatActivity {
         // --- barra de vida (300×30dp) ---
         ViewGroup pv = (ViewGroup) barraVida.getParent();
         if (pv != null) pv.removeView(barraVida);
-        FrameLayout.LayoutParams vidaLP =
-                new FrameLayout.LayoutParams(dp(300), dp(30));
+        FrameLayout.LayoutParams vidaLP = new FrameLayout.LayoutParams(dp(300), dp(30));
         barraVida.setLayoutParams(vidaLP);
         filaTop.addView(barraVida);
 
@@ -727,8 +727,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int dp(int v) {
-        return (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, v, getResources().getDisplayMetrics());
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, getResources().getDisplayMetrics());
     }
 
 
@@ -915,9 +914,20 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("CONECTADO!!", isConnected + "");
                         }
                     } catch (SocketTimeoutException e) {
-                        // Si se ha agotado el tiempo de espera, puedes intentar nuevamente
-                        Log.d("DISCOVERY", "Tiempo de espera agotado. Reintentando...");
+                        intentos++;
+                        Log.d("DISCOVERY", "Tiempo de espera agotado. Reintentando... Intento: " + intentos);
+
+                        if (intentos == 5) {
+                            runOnUiThread(() -> insertarIpManualDialog(ip -> {
+                                new Thread(() -> {
+                                    Log.d("USO IP", "Conectando con: " + ip);
+                                    initConnection(ip);
+                                }).start();
+                            }));
+                            intentos = 0;
+                        }
                     }
+
                 }
                 startSendingVector();
             } catch (IOException e) {
@@ -941,6 +951,7 @@ public class MainActivity extends AppCompatActivity {
             oos = new ObjectOutputStream(socket.getOutputStream());
             oos.flush();
             Log.d("InitConection", "Conexión establecida con el servidor.");
+            this.isConnected = true;
         } catch (IOException e) {
             Log.e("Error", "Error al conectar: " + e.getMessage());
         }
@@ -1038,12 +1049,7 @@ public class MainActivity extends AppCompatActivity {
      * y nos da la opción de cerrar el juego o de reiniciar la partida.
      */
     public void gameOver() {
-        new AlertDialog.Builder(this)
-                .setTitle("Game Over")
-                .setMessage("¿Qué deseas hacer?")
-                .setCancelable(false)
-                .setPositiveButton("Reiniciar", (dialog, which) -> reiniciarJuego())
-                .setNegativeButton("Salir", (dialog, which) -> salir()).show();
+        new AlertDialog.Builder(this).setTitle("Game Over").setMessage("¿Qué deseas hacer?").setCancelable(false).setPositiveButton("Reiniciar", (dialog, which) -> reiniciarJuego()).setNegativeButton("Salir", (dialog, which) -> salir()).show();
     }
 
     /**
@@ -1081,10 +1087,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d("REINICIAR!!!!!", "REINICIAR!!!!!");
         Log.d("JOYSTICK????", isJoystickView + "");
         sendMessageGson(new Message("reset", "reset").toGson());
-        if(isJoystickView){
+        if (isJoystickView) {
             initRemoteController();
-        }
-        else{
+        } else {
             initCarLayout();
         }
     }
@@ -1120,6 +1125,27 @@ public class MainActivity extends AppCompatActivity {
             }.start();
         });
     }
+
+    private void insertarIpManualDialog(IpCallback callback) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Insertar IP manualmente");
+
+        final EditText input = new EditText(this);
+        input.setHint("192.168.1.100");
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String ip = input.getText().toString().trim();
+            Log.d("IP MANUAL", "IP introducida: " + ip);
+            callback.onIpEntered(ip);  // Aquí se pasa la IP
+        });
+
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
 
     public void setScoreTextView(String scoreStr) {
         runOnUiThread(() -> {

@@ -164,6 +164,7 @@ public class MainViewer extends JFrame implements Runnable {
         // Verificar colisión entre nave y asteroides
         for (Asteroide asteroide : asteroides) {
             if (checkImpacto(nave, asteroide)) {
+                asteroidesToRemove.add(asteroide);
                 System.out.println("Colisión detectada entre nave y asteroide!");
                 this.nave.damage(asteroide.getRadio());
                 this.mainController.sendVidaNave(this.nave.getVida());

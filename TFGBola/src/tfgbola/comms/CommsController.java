@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 import java.util.logging.*;
 import tfgbola.TFGMoverObjetosMando;
 import tfgbola.main.objects.Message;
@@ -22,44 +23,52 @@ public class CommsController implements Runnable {
     private ObjectOutputStream oos;
     private TFGMoverObjetosMando main;
 
+    private boolean connected;
+    private int intentos;
+
     public CommsController(TFGMoverObjetosMando aThis) {
         try {
-            main = aThis;
+            this.intentos = 0;
+            this.main = aThis;
+            this.connected = false;
             this.serverSocket = new ServerSocket(10000);
             broadcastToAndroid();
             connectWithRemoteController();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(CommsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void connectWithRemoteController() {
-        String ipServer = discoverAndroidIp(); // IP del servidor AndroidStudio
-        if (ipServer == null) {
-            System.out.println("CONEXIÓN NO ESTABLECIDA! "
-                    + "NO SE PUDO ENCONTRAR LA IP DEL SERVIDOR ANDROID");
-            connectWithRemoteController();
-        }
-        try {
-            System.out.println("Conectando...");
-            this.socketRemoteController = new Socket(ipServer, 11000);
-            oos = new ObjectOutputStream(socketRemoteController.getOutputStream());
-            oos.flush();
-            System.out.println("Conexión establecida con el servidor en el puerto 11000!");
-        } catch (IOException ex) {
-            System.out.println("CONEXIÓN NO ESTABLECIDA!!!!");
-            connectWithRemoteController();
+        while (!connected) {
+            String ipServer = discoverAndroidIp(); // IP del servidor AndroidStudio
+            System.out.println("IPSERVER: " + ipServer);
+
+            if (ipServer == null) {
+                System.out.println("CONEXIÓN NO ESTABLECIDA! NO SE PUDO ENCONTRAR LA IP DEL SERVIDOR ANDROID");
+            } else {
+                try {
+                    System.out.println("Conectando con... " + ipServer);
+                    this.socketRemoteController = new Socket(ipServer, 11000);
+                    oos = new ObjectOutputStream(socketRemoteController.getOutputStream());
+                    oos.flush();
+                    System.out.println("Conexión establecida con " + ipServer + " en el puerto 11000!");
+                    connected = true;
+                } catch (IOException ex) {
+                    System.out.println("CONEXIÓN NO ESTABLECIDA!!!!");
+                }
+            }
         }
     }
-    
-    public void sendNaveInitMessages(double vida, boolean hasScore){
+
+    public void sendNaveInitMessages(double vida, boolean hasScore) {
         sendMessage("vibration", "vibration");
         sendMessage("vida_inicial", vida);
         sendMessage("hasScore", hasScore);
     }
-    
-    public void sendRacingCarInitMessages(float cuentaAtras){
+
+    public void sendRacingCarInitMessages(float cuentaAtras) {
         sendMessage("vibration", "vibration");
         sendMessage("cuenta_atras", cuentaAtras);
     }
@@ -105,8 +114,23 @@ public class CommsController implements Runnable {
             }
         } catch (IOException e) {
             System.out.println("Error al recibir broadcast: " + e.getMessage());
+            this.intentos++;
+            System.out.println("INTENTO: " + this.intentos);
+            if (this.intentos == 5) {
+                this.intentos = 0;
+                return insertarIpManual();
+            }
         }
         return null;
+    }
+
+    public String insertarIpManual() {
+        String ip = "";
+        System.out.println("Introduce la IP del dispositivo Android: ");
+        try (Scanner scanner = new Scanner(System.in)) {
+            ip = scanner.nextLine();
+        }
+        return ip;
     }
 
     public void broadcastToAndroid() {
