@@ -896,7 +896,7 @@ public class MainActivity extends AppCompatActivity {
             lock.setReferenceCounted(true);
             lock.acquire();
             try (DatagramSocket socket = new DatagramSocket(9999)) {
-                socket.setSoTimeout(10000); // Espera hasta 10 segundos
+                socket.setSoTimeout(5000); // Espera hasta 10 segundos
                 byte[] buffer = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
