@@ -8,6 +8,16 @@
     android:background="@drawable/space_background"
     tools:context=".MainActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBarConnect"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <LinearLayout
         android:id="@+id/topBarContainer"
         android:layout_width="match_parent"

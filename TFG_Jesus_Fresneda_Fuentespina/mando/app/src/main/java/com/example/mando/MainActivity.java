@@ -2,6 +2,7 @@ package com.example.mando;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isConnected;
     private CommsController server;
     private int intentos;
+
+    private ProgressBar progressBarConnect;
     // Joystick
     private boolean isJoystickView = true;
     private float vida;
@@ -612,6 +615,9 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer = MediaPlayer.create(this, R.raw.laser_gunshot);
         mediaPlayer.setLooping(false);
 
+        progressBarConnect = findViewById(R.id.progressBarConnect);
+
+
         barraVida = findViewById(R.id.lifeBar);
         score = findViewById(R.id.score);
         setScoreTextView("0");
@@ -660,6 +666,10 @@ public class MainActivity extends AppCompatActivity {
         if (ps != null) ps.removeView(score);
         filaTop.addView(score);
         mainLayout.addView(filaTop);
+
+        ViewGroup pbConnect = (ViewGroup) progressBarConnect.getParent();
+        if (pbConnect != null) pbConnect.removeView(progressBarConnect);
+        mainLayout.addView(progressBarConnect);
 
         // Aplicar el centro del joystick
         joystickView.post(new Runnable() {
@@ -890,6 +900,7 @@ public class MainActivity extends AppCompatActivity {
      * Función para encontrar la ip del servidor del juego.
      */
     private void discoverPCAndConnect() {
+        showSpinner();
         new Thread(() -> {
             WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiManager.MulticastLock lock = wifi.createMulticastLock("lock");
@@ -911,6 +922,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("DISCOVERY", "IP del PC detectada: " + pcIP);
                             initConnection(pcIP);  // ← tu método para conectar
                             isConnected = true;
+                            hideSpinner();
                             Log.d("CONECTADO!!", isConnected + "");
                         }
                     } catch (SocketTimeoutException e) {
@@ -918,9 +930,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("DISCOVERY", "Tiempo de espera agotado. Reintentando... Intento: " + intentos);
 
                         if (intentos == 5) {
+                            hideSpinner();
                             runOnUiThread(() -> insertarIpManualDialog(ip -> {
                                 new Thread(() -> {
-                                    Log.d("USO IP", "Conectando con: " + ip);
+                                    showSpinner();
                                     initConnection(ip);
                                 }).start();
                             }));
@@ -929,11 +942,22 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
+                hideSpinner();
                 startSendingVector();
             } catch (IOException e) {
                 Log.e("DISCOVERY", "No se pudo recibir broadcast: " + e.getMessage());
             }
         }).start();
+    }
+
+    private void showSpinner() {
+        Log.d("SHOW_SPINNER!!!!", "<---------------");
+        runOnUiThread(() -> progressBarConnect.setVisibility(View.VISIBLE));
+    }
+
+    private void hideSpinner() {
+        Log.d("HIDE_SPINNER!!!!", "<---------------");
+        runOnUiThread(() -> progressBarConnect.setVisibility(View.GONE));
     }
 
 
@@ -1119,7 +1143,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onFinish() {
                     textoCuentaAtras.setText("00:00");
-                    if(isConnected){
+                    if (isConnected) {
                         gameOver();
                     }
                 }

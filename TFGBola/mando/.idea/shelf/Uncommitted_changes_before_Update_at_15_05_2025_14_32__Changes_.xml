@@ -1,0 +1,79 @@
+<changelist name="Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]" date="1747312321850" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 15/05/2025 14:32 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/objects/Message.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/objects/Message.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/Message.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/objects/Nave.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/objects/Nave.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/Nave.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/objects/VisualObject.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/objects/VisualObject.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/VisualObject.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/objects/Asteroide.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/objects/Asteroide.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/Asteroide.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/MainController.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/MainController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/MainController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/objects/Car.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/objects/Car.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/Car.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/TFGMoverObjetosMando.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/TFGMoverObjetosMando.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/TFGMoverObjetosMando.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/MainViewer.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/MainViewer.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/MainViewer.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/MainPanel.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/MainPanel.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/MainPanel.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/comms/CommsController.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/comms/CommsController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/CommsController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../dist/TFGBola.jar" />
+    <option name="AFTER_PATH" value="../dist/TFGBola.jar" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/TFGBola.jar" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/objects/Bala.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/objects/Bala.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/Bala.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/objects/Vector.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/objects/Vector.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/Vector.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/MainModel.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/MainModel.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/MainModel.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../build/classes/tfgbola/main/objects/VODynamic.class" />
+    <option name="AFTER_PATH" value="../build/classes/tfgbola/main/objects/VODynamic.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_05_2025_14_32_[Changes]/VODynamic.class" />
+  </binary>
+</changelist>

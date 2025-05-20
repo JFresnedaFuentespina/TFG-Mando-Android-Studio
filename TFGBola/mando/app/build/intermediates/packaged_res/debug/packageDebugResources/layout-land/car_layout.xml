@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/carLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/car_background_2"
+    tools:context=".MainActivity">
+
+
+    <!-- Botón de configuración, arriba a la derecha -->
+    <ImageButton
+        android:id="@+id/btnSettings"
+        android:layout_width="80dp"
+        android:layout_height="72dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/configuraciones" />
+
+    <TextView
+        android:id="@+id/textoCuentaAtras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="24dp"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="2"
+        android:text="00:00"
+        android:textColor="@android:color/white"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+
+    <!-- Acelerador, abajo a la derecha -->
+    <ImageButton
+        android:id="@+id/btnAcelerar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/accelerator" />
+
+    <!-- Freno, justo a la izquierda del acelerador -->
+    <ImageButton
+        android:id="@+id/btnFrenar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="144dp"
+        android:layout_marginBottom="16dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/brake" />
+
+    <!-- Volante, abajo a la izquierda -->
+    <ImageButton
+        android:id="@+id/volante"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/volante" />
+
+    <!-- Marcha atrás, encima de los botones de freno y acelerador -->
+    <ImageButton
+        android:id="@+id/marchaAtras"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/cambios" />
+
+</FrameLayout>
