@@ -292,10 +292,6 @@ public class MainActivity extends AppCompatActivity {
                 marchaAtrasY = (int) marchaAtras.getY();
                 scaleMarchaAtras = marchaAtras.getScaleX();
 
-                Log.d("POS ACC: ", aceleradorX + ", " + aceleradorY + ", Scale: " + scaleAcelerador);
-                Log.d("POS BRK: ", frenoX + ", " + frenoY + ", Scale: " + scaleFreno);
-                Log.d("POS VOLANTE: ", volanteX + ", " + volanteY + ", Scale: " + scaleVolante);
-
                 setContentView(R.layout.car_layout);
                 loadCarLayout();
             }
@@ -438,10 +434,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        // Mostrar las posiciones y escalas en el log
-        Log.d("PosicionBotones", "Acelerador - X: " + aceleradorX + ", Y: " + aceleradorY + ", Scale: " + scaleAcelerador);
-        Log.d("PosicionBotones", "Freno - X: " + frenoX + ", Y: " + frenoY + ", Scale: " + scaleFreno);
-        Log.d("PosicionBotones", "Volante - X: " + volanteX + ", Y: " + volanteY + ", Scale: " + scaleVolante);
     }
 
 
@@ -576,7 +568,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setLifeBar(float vida) {
         this.vida = vida;
-        Log.d("NUEVA VIDA DE LA NAVE!!! ", vida + "");
 
         // Cambiar color según el porcentaje
         int color;
@@ -800,8 +791,6 @@ public class MainActivity extends AppCompatActivity {
                 buttonAX = fakeButton.getLeft();
                 buttonAY = fakeButton.getTop();
 
-                Log.d("POSICIÓN BOTÓN: ", buttonAX + ", " + buttonAY);
-
                 // Re-crear el layout con las coordenadas correctas
                 crearLayoutJoystick(); // Aquí cargas el layout de uso normal
             }
@@ -951,12 +940,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showSpinner() {
-        Log.d("SHOW_SPINNER!!!!", "<---------------");
         runOnUiThread(() -> progressBarConnect.setVisibility(View.VISIBLE));
     }
 
     private void hideSpinner() {
-        Log.d("HIDE_SPINNER!!!!", "<---------------");
         runOnUiThread(() -> progressBarConnect.setVisibility(View.GONE));
     }
 
@@ -1012,7 +999,6 @@ public class MainActivity extends AppCompatActivity {
                             // Obtener los valores de la velocidad desde el joystick
                             Vector velocidad = joystickView.getVelocity();
                             Message msg = new Message("velocidad_nave", velocidad);
-                            //Log.d("ENVIANDO...", msg.toGson());
                             sendMessageGson(msg.toGson());
                         }
                         // Espera de 16ms antes de enviar el siguiente mensaje
@@ -1083,7 +1069,6 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if (oos != null) {
                     String exitMsg = new Message("EXIT", "EXIT").toGson();
-                    Log.d("MENSAJE: ", exitMsg);
                     synchronized (oos) {
                         oos.writeObject(exitMsg);
                         oos.flush();
@@ -1107,8 +1092,6 @@ public class MainActivity extends AppCompatActivity {
      * Función para reiniciar la partida
      */
     private void reiniciarJuego() {
-        Log.d("REINICIAR!!!!!", "REINICIAR!!!!!");
-        Log.d("JOYSTICK????", isJoystickView + "");
         sendMessageGson(new Message("reset", "reset").toGson());
         if (isJoystickView) {
             initRemoteController();
@@ -1123,8 +1106,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void startCuentaAtras() {
         runOnUiThread(() -> {
-            Log.d("CUENTA ATRÁS", cuentaAtrasMilis + "ms");
-
             if (countDownTimer != null) {
                 countDownTimer.cancel();
             }

@@ -100,7 +100,6 @@ public class CommsController implements Runnable {
             JsonObject jsonObject = JsonParser.parseString(jsonMessage).getAsJsonObject();
             String type = jsonObject.get("type").getAsString();
             String obj = jsonObject.get("obj").getAsString();
-            Log.d("MENSAJE RECIBIDO!!!", type + " - " + obj);
             switch (type) {
                 case "vibration":
                     main.vibration();
@@ -122,7 +121,7 @@ public class CommsController implements Runnable {
                 case "new_score":
                     main.setScoreTextView(obj);
                 default:
-                    Log.d("NUEVO MENSAJE!!!", type);
+                    Log.d("NUEVO MENSAJE SIN IDENTIFICAR", type);
                     break;
             }
         } catch (SocketException se) {              // socket cerrado desde fuera

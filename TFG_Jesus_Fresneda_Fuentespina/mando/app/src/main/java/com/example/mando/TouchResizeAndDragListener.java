@@ -67,9 +67,6 @@ public class TouchResizeAndDragListener implements View.OnTouchListener {
                     FrameLayout.LayoutParams finalParams = (FrameLayout.LayoutParams) v.getLayoutParams();
                     float buttonAX = finalParams.leftMargin;
                     float buttonAY = finalParams.topMargin;
-
-                    Log.d("POSICIÓN BOTÓN", "Nuevo botón X: " + buttonAX + ", Y: " + buttonAY);
-
                     break;
             }
         }
