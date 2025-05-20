@@ -5,7 +5,7 @@
 package tfgbola.main;
 
 import java.util.ArrayList;
-import tfgbola.TFGMoverObjetosMando;
+import tfgjuego.TFGJuego;
 import tfgbola.main.objects.Asteroide;
 import tfgbola.main.objects.Bala;
 import tfgbola.main.objects.Car;
@@ -18,11 +18,11 @@ import tfgbola.main.objects.Vector;
  */
 public class MainController {
 
-    private TFGMoverObjetosMando tfg;
+    private TFGJuego tfg;
     private MainViewer viewer;
     private MainModel model;
 
-    public MainController(TFGMoverObjetosMando aThis) {
+    public MainController(TFGJuego aThis) {
         this.tfg = aThis;
         this.model = new MainModel(this);
         this.viewer = new MainViewer(this);

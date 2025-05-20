@@ -11,7 +11,7 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 import java.util.logging.*;
-import tfgbola.TFGMoverObjetosMando;
+import tfgjuego.TFGJuego;
 import tfgbola.main.objects.Message;
 import tfgbola.main.objects.Vector;
 
@@ -21,12 +21,12 @@ public class CommsController implements Runnable {
     private Socket socket, socketRemoteController;
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
-    private TFGMoverObjetosMando main;
+    private TFGJuego main;
 
     private boolean connected;
     private int intentos;
 
-    public CommsController(TFGMoverObjetosMando aThis) {
+    public CommsController(TFGJuego aThis) {
         try {
             this.intentos = 0;
             this.main = aThis;

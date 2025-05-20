@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
-package tfgbola;
+package tfgjuego;
 
 import tfgbola.comms.CommsController;
 import tfgbola.main.MainController;
@@ -12,12 +12,12 @@ import tfgbola.main.objects.Vector;
  *
  * @author jesus
  */
-public class TFGMoverObjetosMando {
+public class TFGJuego {
 
     private CommsController comms;
     private MainController main;
 
-    public TFGMoverObjetosMando() {
+    public TFGJuego() {
         comms = new CommsController(this);
         main = new MainController(this);
         Thread thComms = new Thread(comms);
@@ -64,7 +64,7 @@ public class TFGMoverObjetosMando {
 
     public static void main(String[] args) {
         // TODO code application logic here
-        new TFGMoverObjetosMando();
+        new TFGJuego();
     }
 
     public void close() {
