@@ -1016,7 +1016,6 @@ public class MainActivity extends AppCompatActivity {
                 synchronized (oos) {
                     try {
                         if (oos != null) {
-                            //Log.d("MENSAJE: ", msg);
                             oos.writeObject(msg);
                             oos.flush();
                         }
@@ -1120,7 +1119,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onFinish() {
                     textoCuentaAtras.setText("00:00");
-                    gameOver();
+                    if(isConnected){
+                        gameOver();
+                    }
                 }
             }.start();
         });
